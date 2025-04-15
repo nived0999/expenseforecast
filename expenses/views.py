@@ -29,7 +29,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 data = pd.read_csv('dataset.csv')
 
-# Preprocessing
 stop_words = set(stopwords.words('english'))
 
 def preprocess_text(text):
@@ -39,11 +38,9 @@ def preprocess_text(text):
 
 data['clean_description'] = data['description'].apply(preprocess_text)
 
-# Feature extraction
 tfidf_vectorizer = TfidfVectorizer()
 X = tfidf_vectorizer.fit_transform(data['clean_description'])
 
-# Train a RandomForestClassifier
 model = RandomForestClassifier()
 model.fit(X, data['category'])
 @login_required(login_url='/authentication/login')
@@ -214,17 +211,6 @@ def expense_edit(request, id):
             messages.error(request, 'Invalid date format')
             return render(request, 'expenses/edit_income.html', context)
 
-        # expense.owner = request.user
-        # expense.amount = amount
-        # expense. date = date
-        # expense.category = category
-        # expense.description = description
-
-        # expense.save()
-
-        # messages.success(request, 'Expense updated  successfully')
-
-        # return redirect('expenses')
 
 @login_required(login_url='/authentication/login')
 def delete_expense(request, id):
@@ -265,16 +251,14 @@ def stats_view(request):
 
 @login_required(login_url='/authentication/login')
 def predict_category(description):
-    predict_category_url = 'http://localhost:8000/api/predict-category/'  # Use the correct URL path
+    predict_category_url = 'http://localhost:8000/api/predict-category/' 
     data = {'description': description}
     response = requests.post(predict_category_url, data=data)
 
     if response.status_code == 200:
-        # Get the predicted category from the response
         predicted_category = response.json().get('predicted_category')
         return predicted_category
     else:
-        # Handle the case where the prediction request failed
         return None
     
 
