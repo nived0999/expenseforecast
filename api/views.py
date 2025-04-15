@@ -1,4 +1,4 @@
-# api/views.py
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -47,20 +47,16 @@ class UpdateDataset(APIView):
        new_data = request.data.get('new_data')
 
        if 'description' in new_data and 'category' in new_data:
-            # Load your existing dataset
-            data = pd.read_csv('dataset.csv')  # Load the existing dataset
+            data = pd.read_csv('dataset.csv')  
             new_category = new_data['category']
             new_description = new_data['description']
 
-            # Append the new data to the dataset
             new_row = {'description': new_description, 'category': new_category, 'clean_description': preprocess_text(new_description)}
             data = pd.concat([data, pd.DataFrame([new_row])], ignore_index=True)
-            # Save the updated dataset
             data.to_csv('dataset.csv', index=False)
             
             tfidf_vectorizer = TfidfVectorizer()
 
-            # Retrain the model with the updated dataset
             X = tfidf_vectorizer.transform(data['clean_description'])
             model.fit(X, data['category'])
 
