@@ -3,7 +3,7 @@ from .forms import User_Profile
 from django.contrib import messages
 from django.contrib.auth.models import User
 from userincome.models import Source
-# Create your views here.
+
 
 def userprofile(request):
     Sources=Source.objects.filter(owner=request.user)
